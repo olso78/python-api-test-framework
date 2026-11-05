@@ -15,6 +15,7 @@ import logging
 import re
 import sys
 from collections import Counter
+from pathlib import Path
 
 
 def read_text(path):
@@ -23,8 +24,7 @@ def read_text(path):
     提示：用 with open(path, encoding='utf-8') as f
     返回：文件内容字符串
     """
-    with open(path,encoding='utf-8') as f:
-        return f.read()
+    return Path(path).read_text(encoding='utf-8')
 
 def split_words(text):
     """TODO 2：把文本切成单词列表。
