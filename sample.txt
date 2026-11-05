@@ -1,0 +1,4 @@
+Python is a language. Python is easy to read.
+A good programmer reads code more than writes code.
+Reading code is a skill. Writing code is a skill too.
+Practice makes the skill better. Practice every day.
