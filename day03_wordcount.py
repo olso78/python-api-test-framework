@@ -39,7 +39,7 @@ def split_words(text):
     """
     return re.findall(pattern=r"[A-Za-z]+",string=text.lower())
 
-def count_words(words,n = 10):
+def count_words(words,n = 1):
     """TODO 3：统计词频并返回出现次数最多的前 10 个。
 
     提示：Counter(words).most_common(10)
