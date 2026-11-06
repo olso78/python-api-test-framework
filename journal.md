@@ -24,3 +24,12 @@
 
 明天：Day 5，`test_wordcount.py` 三个用例（小写化、去标点、取前 N），`pytest -v` 全绿，再故意改坏一个断言看它变红；下午装 MySQL 8、建库建表，把 W2 提前两天起。
 
+## 11-06
+
+写了：`test_wordcount.py` 四个用例（小写化、去标点、取前 N、空输入），先红后绿跑通 `4 passed`；故意把断言改坏两次，确认 `pytest` 的红是长什么样、报错里 `assert 实际 == 期望` 怎么读；下午在 MySQL 建 `bootcamp` 库和 `words` 表，用 `insert / update / delete / select ... where ... order by` 把增删改查各跑了两轮。
+
+卡在：① SQL 语句基本忘光——创库、创表、CRUD 每一条都要查手册才写得出来，`creat`、`dateime`、列定义写重、漏分号、`select * where` 少 `from`，一天里五处语法错；② 为了让 `test_count_top_n` 变绿，把 `count_words` 的默认值从 10 改成了 1——测试绿了，但函数和它自己的 docstring「前 10 个」矛盾了，等于用改契约的方式让测试闭嘴（后来默认值改回 10、测试显式传 n，空输入也补了 `if not cw: return`，见 cde0207）；③ 环境踩坑：激活的是别的项目的 `.venv1`，`pytest` 一开始「没装」，其实是装错环境；`python -m venv .vemv` 还打错一个字，留下一个死环境。
+
+明天：Day 6，`words.py` 只做 `add` / `list`，JSON 存 `{"apple": "苹果"}`，文件不存在从 `{}` 起；重复 `add` 的行为（覆盖还是报错）自己定，但要写进 README。
+
+

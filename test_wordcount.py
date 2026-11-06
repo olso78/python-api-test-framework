@@ -11,7 +11,7 @@ def test_split_ignores_punct():
 def test_count_top_n():
     # TODO: ["a","a","b"] 取前 1 个，应该是 [("a", 2)]
     ...
-    assert count_words(["a","a","b"]) == [("a", 2)]
+    assert count_words(["a","a","b"],1) == [("a", 2)]
 def  test_empty_text():
     # TODO: 空字符串应该返回空列表
     ...
