@@ -39,7 +39,7 @@ def split_words(text):
     """
     return re.findall(pattern=r"[A-Za-z]+",string=text.lower())
 
-def count_words(words,n = 1):
+def count_words(words,n = 10):
     """TODO 3：统计词频并返回出现次数最多的前 10 个。
 
     提示：Counter(words).most_common(10)
@@ -97,6 +97,7 @@ def main():
     print_result(cw)
 
     assert len(cw) <= n, f"最多有{n}条，实际是{len(cw)}"
+    if not cw : return
     assert cw[0][1] >= cw[-1][1],"没有按次数排序"
 
 if __name__ == "__main__":

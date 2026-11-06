@@ -1,3 +1,6 @@
 __pycache__/
 wordcount.log
 .idea/
+.venv/
+.vemv/
+.pytest_cache/
