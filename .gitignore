@@ -4,3 +4,4 @@ wordcount.log
 .venv/
 .vemv/
 .pytest_cache/
+words.json

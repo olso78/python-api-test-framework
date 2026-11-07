@@ -14,7 +14,11 @@ bootcamp/
 ├─ day02_wordcount.py    第二版：sys.argv 传文件与 N，文件不存在不崩
 ├─ day03_wordcount.py    第三版（当前）：加 logging、pathlib、N 非数字的兜底
 ├─ test_wordcount.py     pytest 用例（4 个）
+├─ words.py              单词本：add / list，JSON 存读
+├─ test_words.py         单词本的 pytest 用例（2 个，用 tmp_path 隔离）
+├─ test_db.py            pymysql 连库、查询、与脚本输出对账
 ├─ sample.txt            英文样本文本（24 个不同词）
+├─ words.json            单词数据（本地数据，不进仓库）
 ├─ wordcount.log         运行日志（已在 .gitignore 里，不进仓库）
 ├─ journal.md            每天三行的学习日志
 └─ README.md             本文件
@@ -115,6 +119,39 @@ select word, freq from words order by freq desc limit 10;
 - `words` 上没有 `unique(word)`，所以只能 `update` 改，不能一条语句搞定"有就更新、没有就插入"；
 - 字符串用单引号是标准写法（双引号在默认 SQL 模式下也能用，但换数据库就未必）。
 
+## 单词本（words.py）的行为约定
+
+这一节不是介绍，是**契约**：代码先写，再让代码符合这里写的；不符合就改代码，而不是改这句话。
+
+| 场景 | 行为 |
+|---|---|
+| `add` 新词 | 写入后打印 `添加成功：apple 苹果` |
+| `add` 已存在的词 | **覆盖旧释义**，打印 `已更新：apple（苹果 → 苹果核）`，不报错 |
+| 词的大小写与空格 | 统一 `strip().lower()`：`Apple`、` apple `、`APPLE` 都归到同一个 key `apple`；释义只 `strip()`，保留原来的大小写 |
+| `list` | 逐行打印 `word : 释义`；空文件打印 `单词本为空` |
+| 缺子命令 / 缺参数 | 打印用法后正常退出（退出码 0），不抛堆栈 |
+| 文件不存在 / 空文件 / 坏 JSON | 一律当 `{}` 处理，不崩 |
+| 数据文件 | `words.json` 是本地数据，进 `.gitignore`，不进仓库 |
+
+**为什么重复 add 选"覆盖"而不是"报错"**：命令要能重复执行而不炸——手滑重跑、脚本里重跑都常见。报错会把"幂等"变成"要人工判断"。
+
+**为什么统一 `lower()`**：同一个词的不同大小写算同一个词，是词典类工具的常识；不统一的话，写到第 20 个词就会出现 `Apple` / `apple` 两条。
+
+对应到代码上只有三处要改（当前 `words.py` 还没做到）：
+
+1. `cmd_add` 开头加 `word = word.strip().lower()`、`meaning = meaning.strip()`；
+2. `cmd_add` 写回前判断 `if word in data:` → 打印"已更新"，否则打印"添加成功"；
+3. `main()` 里那句 `print("格式：python words.py add 单词 释义")` 现在落在**成功路径**的 `else` 分支里，应该挪进 `len(sys.argv) < 4` 的分支。
+
+验收（三条一起跑）：
+
+```bash
+python words.py add Apple 苹果
+python words.py add apple 苹果核
+python words.py list      # 只应有一条 apple，释义是"苹果核"
+python words.py add       # 打印用法，退出码 0
+```
+
 ## 代码怎么长成这样（git 历史）
 
 | 提交 | 改了什么 | 为什么 |
@@ -149,7 +186,10 @@ Python 3.13.9（项目内 `.venv`），pytest 9.2.0。运行时不依赖第三�
 - [x] Day 4：`git log` 六次以上提交 + README 重写
 - [x] Day 5：`pytest` 四个用例，先红后绿
 - [x] 数据库：建库建表 + CRUD（W2 提前）
-- [ ] Day 6–7：命令行单词本 `add` / `list` / `search` / `delete`
+- [x] pymysql：连库、查询、与 `day03` 输出对账
+- [x] Day 6（部分）：单词本 `add` / `list`，JSON 存读 + 2 个用例
+- [ ] Day 6（待补）：重复 add 的覆盖提示 + 大小写归一化（见"行为约定"）
+- [ ] Day 7：`search` / `delete` + 对应用例
 
 ## 三条规矩（给自己）
 
