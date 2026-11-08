@@ -1,9 +1,6 @@
 import json
 import sys
 
-from pylsp_jsonrpc.exceptions import JsonRpcInternalError
-
-
 def load(path):
     try:
         with open(path) as f:
