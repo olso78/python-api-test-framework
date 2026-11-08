@@ -32,4 +32,12 @@
 
 明天：Day 6，`words.py` 只做 `add` / `list`，JSON 存 `{"apple": "苹果"}`，文件不存在从 `{}` 起；重复 `add` 的行为（覆盖还是报错）自己定，但要写进 README。
 
+## 11-07
+
+写了：`words.py` 补齐行为约定——`strip().lower()` 归一、重复 add 打"已更新"、`save()` 挪出分支无条件执行、用法提示从成功路径挪回防呆分支；`test_words.py` 加 `test_add_twice_then_load`（`Apple` / `apple` 只留一个 key）；`db_check.py` 用 pymysql 连 `bootcamp` 库查 `words` 表、与 `day03` 输出对账；闭卷复现 `t11.py`（骨架 60%）；LeetCode 283 移动零 / 209 长度最小的子数组 / 3 无重复最长子串。
+
+卡在：① 归一化时把 `save()` 关进了 `else`，`test_add_then_load` 当场变红——第一次真的被回归测试拦住，也第一次体会到"判断要在修改之前、落盘必须无条件"；② 闭卷时 API 全线失守：`json(f)`、`open` 漏 `encoding`、`return json.dump(...)`、`split()` 当 `strip()`、`data` 没 `.items()`、`cmd_add` 少传 `path`、缺 `sys.exit()`；③ 移动零把"遇到非零才交换"写成"遇到零才交换"，根因是没定义 `slow` 的不变量；④ `test_db.py` 起名撞了 pytest 收集规则（所有 `test_*.py` 都会被 import 执行），一导入就 `ModuleNotFoundError: pymysql`，直接把整个套件带崩，改名 `db_check.py` 后 `7 passed`；⑤ `pymysql` 只装在当时的那个环境，bootcamp 的 `.venv` 和 anaconda 里都没有——换解释器就跑不起来，这是环境问题不是代码问题。
+
+明天：Day 7，`search` / `delete` 两个子命令 + 2 个用例；下午 W2 收尾（JOIN / 聚合 + 用 pymysql 把 `words.json` 写进 MySQL）；傍晚合并两份执行版、根目录文件归位；顺手补 `requirements.txt` 把依赖钉住。
+
 
