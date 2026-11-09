@@ -40,4 +40,12 @@
 
 明天：Day 7，`search` / `delete` 两个子命令 + 2 个用例；下午 W2 收尾（JOIN / 聚合 + 用 pymysql 把 `words.json` 写进 MySQL）；傍晚合并两份执行版、根目录文件归位；顺手补 `requirements.txt` 把依赖钉住。
 
+## 11-08
+
+写了：`cmd_search`（前缀匹配 + 无结果提示）和 `cmd_delete`（不存在时提示、`save()` 无条件执行），新增 2 个用例，`pytest` 到 **9 passed**；建 `dictionary` 表（`word` 做主键）跑通 JSON→MySQL 迁移（`sync_to_mysql.py`，upsert + `commit()` 放在循环外）；用 `LEFT JOIN` 把"词频"和"词典"连起来对账；LeetCode 206 反转链表 + 704 二分查找。
+
+卡在：① SQL 一天 14 处报错，其中 8 处是 11-07 原样复发（表名、`VARCHAR` 长度、时间戳默认值、多行插入括号、`SELECT`/`WHERE` 职责、`DELETE` 条件、`ORDER BY` + `LIMIT`）——查手册查出来的语法，隔一天就还回去了；② 工程习惯：`executemany` 拿去跑建表、建表语句放进 `for` 循环、`commit()` 忘了放循环外；③ `LEFT JOIN` 查不出数据，实际是左表 `words` 被之前的 `DELETE` 清空了；④ 测试里 `from bootcamp.words import`、给测试函数乱加 `app` 参数、`cmd_search` 传 4 个参数、`data.items()` 当成员判断用、`data()` 当函数调用；⑤ 缩进把"收集结果"和"判断 + 打印"一起写进了 `for` 循环，导致每遍历一个词就打印一次；⑥ 链表反转里调用自身忘了 `self.`。
+
+明天：11/09 周日，闭卷默写七条 SQL（对照清单看能过几条）、答昨天欠的卡、W1 回环重跑 `day01`–`day03` 与 `words.py` 四个命令；傍晚把驾照"哪家 / 多少钱 / 多久"查出来给结论（11/10 是截止线）。
+
 
