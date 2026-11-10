@@ -1,11 +1,13 @@
 create database test_bootcamp;
 use test_bootcamp;
+DROP TABLE IF EXISTS words;
 create table words(
     id int primary key auto_increment,
-    word varchar(10) not null ,
+    word varchar(50) not null ,
     freq int not null,
     created_at datetime default current_timestamp
-);
+)default charset = utf8mb4 unique(word);
+
 insert into words(word,freq) values('apple', 10),('banana', 20),('orange', 30),('apple', 40),('banana', 50),('apple', 60);
 select word from words where freq > 2;
 update words set freq = 2 where word = 'apple';
