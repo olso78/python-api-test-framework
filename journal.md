@@ -56,4 +56,12 @@
 
 明天：Day 9（11/10），先把两条 SQL 笔误改掉、七条重默到 7/7；pytest 盲敲练熟（三个参数 + 手写一个会变红的用例）；A2 把 `get(url)` 和 `check(resp, code)` 封成两个函数、调用两次（200 与 404）；驾校确认报哪家（11/14 前定）。
 
+## 11-10
+
+写了：`sql\practice.sql` 重建到 `test_bootcamp` 库（`varchar(50)`、`utf8mb4`、`drop table if exists`），七条从头重跑；A2 修成窄捕获（`except requests.RequestException`）、`check` 改用 `RuntimeError` 并带上"期望 / 实际"、404 那条改成 `check(r2, 404)`；pytest 亲手验证 `-x` 与 `--tb=short`；HTTP 三组笔记（401 vs 403、GET 幂等、PUT vs PATCH、Token 无状态）；盲敲 128 与 49；LeetCode 20 有效括号、21 合并两个有序链表、160 相交链表、141 环形链表。晚上把第二天的活提前做了：A3 三个用例（`test_a3.py`：`check` 通过 / `check` 抛错 / 真请求集成）、A4 数据外置（`data/cases.yaml` + `parametrize` 跑 2 条）、SQL 分组 `GROUP BY` / `HAVING` 与事务三段（`START TRANSACTION` → `ROLLBACK` → `COMMIT`）。
+
+卡在：① PowerShell 不支持 `<` 输入重定向（`ParserError: RedirectionNotSupported`），得用 `Get-Content | mysql` 或 `source`；② 脚本里 `UPDATE ... freq=2` 之后再 `DELETE ... freq=60` 删不到——语句之间共享状态；③ 建表时把 `unique(word)` 写进了表选项，唯一约束要写在括号内；④ `except Exception` 太宽：`data['stargazers_count:']` 多打一个冒号触发 `KeyError`，被外层兜住直接 `exit(1)`，404 那步根本没跑；⑤ `raise ('...')` 不能抛字符串、`except Exception:` 没 `as e` 却用了 `{e}`；⑥ 128 内层循环没有递增变量、`curr_len` 初始化成 0；⑦ 49 对整个列表 `sorted(strs)`、新建 key 时忘了 `append` 当前元素、`dic.value()` / `dic()` / `list[dic.values()]`；⑧ A3/A4 的坑：测试文件与函数都以 `test_` 开头 pytest 才扫得到、`@pytest.mark.skipif` 拼写与"必须带条件"、`pytest.raises` 块里不能混进"不报错"的语句、`FakeResp` 传了类而不是实例、`yaml.safe_load` 要传文件对象、YAML 用 `key: value` 与 `-` 列表、`parametrize` 的参数名要和函数形参对齐；⑨ **业务函数里 `sys.exit(1)` 会杀死整个 pytest**——`get()` 断网后退出进程，外层 `except` 根本接不住；⑩ `data/cases.yaml` 用相对路径，在 bootcamp 根目录跑 pytest 就 `FileNotFoundError`（收集阶段直接中断）。
+
+明天：11/11，只修三处收尾——`test_a4.py` 改用 `Path(__file__).parent / "data" / "cases.yaml"`、`get()` 把 `sys.exit` 换成让异常上抛、`FakeResp` 传实例并给集成用例补 `check(get(url), 200)`；跑通后提交，再打驾校电话（11:00 前）。
+
 

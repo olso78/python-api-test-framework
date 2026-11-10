@@ -1,0 +1,4 @@
+- url: https://api.github.com/repos/psf/requests
+  code: 200
+- url: https://api.github.com/repos/psf/this_repo_does_not_exist
+  code: 404
