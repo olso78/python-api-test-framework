@@ -48,4 +48,12 @@
 
 明天：11/09 周日，闭卷默写七条 SQL（对照清单看能过几条）、答昨天欠的卡、W1 回环重跑 `day01`–`day03` 与 `words.py` 四个命令；傍晚把驾照"哪家 / 多少钱 / 多久"查出来给结论（11/10 是截止线）。
 
+## 11-09
+
+写了：盲敲复习——闭卷默写七条 SQL 并在 MySQL 里逐条执行（`DELETE`、`SELECT` 各错一处），答掉卡 9 和卡 10；项目 A 的 A1 起跑：`A1_project/a1_get.py` 里用 `requests.get` + `timeout` + 状态码断言，跑通 GitHub star 数（54732），顺手走过 404 和连接超时两条错误路径；LeetCode 128 最长连续序列 + 49 字母异位词分组。
+
+卡在：① `DELETE words WHERE ...` 漏了 `FROM`，报 1064，报错位置指向 `near 'WHERE word = 'banana''`；② `SELECT (word, freq) FROM words` 多加了括号，报 1241 `Operand should contain 1 column(s)`；③ 二分查找把 `mid` 写成 `right - left + 1`——那是区间长度，不是中点；④ 盲敲 pytest 还是不熟：命令会敲，但说不清 `-v` / `-q` / `-x` 各管什么，红的时候先看哪一行也含糊；⑤ 文件名手打错一次（`ai_get.py`）、目录多进一层（`A1_project`）一次。
+
+明天：Day 9（11/10），先把两条 SQL 笔误改掉、七条重默到 7/7；pytest 盲敲练熟（三个参数 + 手写一个会变红的用例）；A2 把 `get(url)` 和 `check(resp, code)` 封成两个函数、调用两次（200 与 404）；驾校确认报哪家（11/14 前定）。
+
 
