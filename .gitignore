@@ -5,3 +5,5 @@ wordcount.log
 .vemv/
 .pytest_cache/
 words.json
+run.log
+reports/

@@ -58,10 +58,18 @@
 
 ## 11-10
 
-写了：`sql\practice.sql` 重建到 `test_bootcamp` 库（`varchar(50)`、`utf8mb4`、`drop table if exists`），七条从头重跑；A2 修成窄捕获（`except requests.RequestException`）、`check` 改用 `RuntimeError` 并带上"期望 / 实际"、404 那条改成 `check(r2, 404)`；pytest 亲手验证 `-x` 与 `--tb=short`；HTTP 三组笔记（401 vs 403、GET 幂等、PUT vs PATCH、Token 无状态）；盲敲 128 与 49；LeetCode 20 有效括号、21 合并两个有序链表、160 相交链表、141 环形链表。晚上把第二天的活提前做了：A3 三个用例（`test_a3.py`：`check` 通过 / `check` 抛错 / 真请求集成）、A4 数据外置（`data/cases.yaml` + `parametrize` 跑 2 条）、SQL 分组 `GROUP BY` / `HAVING` 与事务三段（`START TRANSACTION` → `ROLLBACK` → `COMMIT`）。
+写了：`sql\practice.sql` 重建到 `test_bootcamp` 库（`varchar(50)`、`utf8mb4`、`drop table if exists`），七条从头重跑；A2 修成窄捕获（`except requests.RequestException`）、`check` 改用 `RuntimeError` 并带上"期望 / 实际"、404 那条改成 `check(r2, 404)`；pytest 亲手验证 `-x` 与 `--tb=short`；HTTP 三组笔记（401 vs 403、GET 幂等、PUT vs PATCH、Token 无状态）；盲敲 128 与 49；LeetCode 20 有效括号、21 合并两个有序链表、160 相交链表、141 环形链表。晚上把第二天的活提前做了：A3 三个用例（`test_a3.py`：`check` 通过 / `check` 抛错 / 真请求集成）、A4 数据外置（`data/cases.yaml` + `parametrize` 跑 2 条）、SQL 分组 `GROUP BY` / `HAVING` 与事务三段（`START TRANSACTION` → `ROLLBACK` → `COMMIT`）。收尾又修了三处并把套件跑绿：`test_a4` 改用 `Path(__file__).parent / "data" / "cases.yaml"`、`get()` 去掉 `sys.exit` 改成让异常上抛、`FakeResp` 传实例且集成用例补上 `check(get(url), 200)`——在 `bootcamp` 根目录 `python -m pytest -q` 得到 **14 passed**（词频 4 + 单词本 5 + A3 三 + A4 两）。
 
 卡在：① PowerShell 不支持 `<` 输入重定向（`ParserError: RedirectionNotSupported`），得用 `Get-Content | mysql` 或 `source`；② 脚本里 `UPDATE ... freq=2` 之后再 `DELETE ... freq=60` 删不到——语句之间共享状态；③ 建表时把 `unique(word)` 写进了表选项，唯一约束要写在括号内；④ `except Exception` 太宽：`data['stargazers_count:']` 多打一个冒号触发 `KeyError`，被外层兜住直接 `exit(1)`，404 那步根本没跑；⑤ `raise ('...')` 不能抛字符串、`except Exception:` 没 `as e` 却用了 `{e}`；⑥ 128 内层循环没有递增变量、`curr_len` 初始化成 0；⑦ 49 对整个列表 `sorted(strs)`、新建 key 时忘了 `append` 当前元素、`dic.value()` / `dic()` / `list[dic.values()]`；⑧ A3/A4 的坑：测试文件与函数都以 `test_` 开头 pytest 才扫得到、`@pytest.mark.skipif` 拼写与"必须带条件"、`pytest.raises` 块里不能混进"不报错"的语句、`FakeResp` 传了类而不是实例、`yaml.safe_load` 要传文件对象、YAML 用 `key: value` 与 `-` 列表、`parametrize` 的参数名要和函数形参对齐；⑨ **业务函数里 `sys.exit(1)` 会杀死整个 pytest**——`get()` 断网后退出进程，外层 `except` 根本接不住；⑩ `data/cases.yaml` 用相对路径，在 bootcamp 根目录跑 pytest 就 `FileNotFoundError`（收集阶段直接中断）。
 
 明天：11/11，只修三处收尾——`test_a4.py` 改用 `Path(__file__).parent / "data" / "cases.yaml"`、`get()` 把 `sys.exit` 换成让异常上抛、`FakeResp` 传实例并给集成用例补 `check(get(url), 200)`；跑通后提交，再打驾校电话（11:00 前）。
+
+## 11-11
+
+写了：三处收尾全部改完（`Path(__file__)` 定位 yaml、`get()` 去掉 `sys.exit` 让 `RequestException` 上抛、`FakeResp` 传实例 + 集成用例补 `check(get(url), 200)`），`python -m pytest -q` 回到 **14 passed** 并提交（`28e15b2`）；上午做了一次 A1–A4 的口述复述，自己记下 9 个卡点；11:00 后外出，没有写代码。
+
+卡在：① A1 复述时漏了"断言才是通了的证明"，还把 A1 和 A4 的场景搞混（A1 的 URL 是写死的，读文件是 A4）；② A2 把拆分原因说成"不然断言不生效"，真实原因是**可测试性**——`check` 只吃 response，才能用 `FakeResp` 脱离网络；还把 `check` 说成"捕获 RuntimeError"，其实它是**主动 raise**；③ A3 忘了假对象伪造的是 response 不是 URL、忘了集成用例是 `check(get(url), 200)`、忘了断网用 `pytest.skip()`；④ A4 想不起 `@pytest.mark.parametrize` 的名字，讲不出"加用例不改代码"是因为 pytest 逐项遍历注入形参，`case[url]` 少了引号；⑤ 背了 4 天没答出的卡 11（顺序 bug）、卡 12（json API），说明它们还没在代码里被用过。
+
+明天：Day 11（11/12），A5 分层改造——建 `api/` / `common/` / `testcases/`，把 `get` / `check` 挪进对应模块，接 logging 与 `pytest-html`，一条命令出报告；改完用例数仍是 14。
 
 
