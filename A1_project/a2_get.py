@@ -1,15 +1,7 @@
 import requests,sys
-def get(url):
-    try:
-        r = requests.get(url,timeout=5)
-        return r
-    except requests.RequestException as e:  # 只捕网络层
-        print(f"网络异常：{e}")
+from api.client import get
+from common.assert_util import check
 
-def check(resp,code):
-    if resp.status_code != code:
-       raise RuntimeError(f"状态码异常，期望:{code}，实际:{resp.status_code}")
-    return resp
 if __name__ == '__main__':
     url = 'https://api.github.com/repos/psf/requests'
     url_404 = 'https://api.github.com/repos/psf/this_repo_does_not_exist'
