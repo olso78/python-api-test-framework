@@ -1,2 +1,5 @@
 pytest
 pymysql
+pytest-html
+requests
+pyyaml

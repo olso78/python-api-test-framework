@@ -72,4 +72,12 @@
 
 明天：Day 11（11/12），A5 分层改造——建 `api/` / `common/` / `testcases/`，把 `get` / `check` 挪进对应模块，接 logging 与 `pytest-html`，一条命令出报告；改完用例数仍是 14。
 
+## 11-12
+
+写了：A5 分层重构落地——`api/client.py`（只发请求、异常上抛）、`common/assert_util.py`、`common/logger.py`（双通道写日志）、`testcases/test_github.py`、`conftest.py` 用 `pytest_generate_tests` 钩子读 `data/cases.yaml`；`pytest --html=reports/report.html --self-contained-html` 生成报告（41KB），重构前后都是 **14 passed**；LeetCode 5 最长回文子串 + 56 合并区间；复习 160 / 141 / 21 / 20 四题；卡 11、卡 12 用"举自己的例子"的方式答出来（D+1 与逾期 D+3 一并勾掉）。
+
+卡在：① 搬 `client.py` 时照抄旧 `try/except`，只 print 不 raise，断网返回 `None`，上层直接 `AttributeError`；② 旧 `test_a3.py` / `test_a4.py` 没删，pytest 扫到两份重复用例；③ 搬到 `testcases/` 后 `Path(__file__).parent / 'data'` 失效（少跳一级，或该交给根 `conftest.py`）；④ 想把 fixture 塞进 `parametrize`、想在测试里 `for` 循环遍历；⑤ 把钩子 `pytest_generate_tests` 写成装饰器、手动 `from conftest import`、`conftest.py` 敲成 `contest.py`；⑥ `logger.py` 里试图 `def logging.basicConfig()` 重定义官方函数、`FileHandler` 少个 H、字符串引号没闭合；⑦ 报告参数不识别（解释器没对齐 / `reports/` 目录不存在）；⑧ 链表复习：160 忘了"走到 `None` 才跳另一条链"、141 `while` 写成 `fast != slow` 且漏判 `fast.next`、21 `dummy` 没实例化 / 用 `.next` 比值 / 返回 `[dummy]`、20 右括号匹配的边界（栈空、栈非空）不清。
+
+明天：11/13，A6 —— 建远程仓库并 push，加 `.github/workflows/test.yml` 让 push 自动跑 pytest，补 README 的"A1 项目"一节（怎么跑 / 怎么测 / 目录说明），把日志路径固定到 `reports/`，把 `test_github_cases` 的断网处理统一成 `skip`。
+
 

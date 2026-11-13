@@ -26,6 +26,9 @@ def test_github_api():
 def test_github_cases(case):
     url = case['url']
     code = case['code']
-    resp = get(url)
-    check(resp,code)
-    logger.info(f"GET {url} -> {resp.status_code}")
+    try:
+        resp = get(url)
+        check(resp,code)
+        logger.info(f"GET {url} -> {resp.status_code}")
+    except requests.RequestException as e:
+        pytest.skip(f"网络异常，跳过集成测试: {e}")

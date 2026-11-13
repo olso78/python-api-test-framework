@@ -1,5 +1,6 @@
 import pymysql,json
-conn = pymysql.connect(host = 'localhost',user = 'root',password = 'root',database = 'bootcamp')
+import os
+conn = pymysql.connect(host = 'localhost',user = 'root',password = os.getenv('MYSQL_PWD','root'),database = 'bootcamp')
 cursor = conn.cursor()
 # 1. 建表
 cursor.execute(
