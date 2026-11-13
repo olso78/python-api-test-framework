@@ -1,3 +1,24 @@
+## 项目二：接口自动化测试框架（A1_project/）
+
+[![tests](https://github.com/olso78/python-api-test-framework/actions/workflows/test.yml/badge.svg)](https://github.com/olso78/python-api-test-framework/actions)
+
+对 GitHub 公开 API 做状态码校验：`requests` 发请求 → `check()` 统一断言 → `cases.yaml` 数据驱动 → `pytest` 生成 HTML 报告 → `GitHub Actions` 每次 push 自动回归。
+
+### 🚀 怎么跑
+1. 安装依赖：`pip install -r requirements.txt`
+2. 运行全量测试：`python -m pytest -q`
+3. 生成 HTML 报告：`python -m pytest -q --html=reports/report.html --self-contained-html`
+
+### 🧪 怎么测
+* **单元测试**：使用 `FakeResp` 假对象验证断言函数 `check()`，无需网络，秒级运行。
+* **集成测试**：真实请求 GitHub API，标记为 `@pytest.mark.integration`，在 CI 环境中自动排除。
+
+### 📁 目录说明
+* `api/`：底层网络请求封装（client.py）
+* `common/`：公共模块（断言、日志）
+* `testcases/`：测试用例脚本
+* `data/`：YAML 数据驱动文件
+* `conftest.py`：Pytest 全局钩子，自动注入测试数据
 # 词频统计小工具
 
 > Python 7 天练习项目 · Day 1–5 已完成 · 运行时不依赖第三方库
