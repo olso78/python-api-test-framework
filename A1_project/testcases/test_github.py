@@ -14,6 +14,7 @@ def test_check_error():
     with pytest.raises(RuntimeError):
         check(FakeResp(),404)
 
+@pytest.mark.integration
 def test_github_api():
     url = 'https://api.github.com/repos/psf/requests'
     try:
@@ -23,6 +24,7 @@ def test_github_api():
     except requests.RequestException:
         pytest.skip("网络异常，跳过集成测试")
 
+@pytest.mark.integration
 def test_github_cases(case):
     url = case['url']
     code = case['code']
