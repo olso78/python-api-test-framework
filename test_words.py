@@ -26,3 +26,11 @@ def test_delete_missing(tmp_path):# 删不存在的词，文件内容不能变
     cmd_delete(fake_path,'fire')
     data = load(fake_path)
     assert data == {}
+def test_search_prefix_prints(capsys, tmp_path):# search 要真的把结果打到屏幕上
+    fake_path = tmp_path / 'not_exist.json'
+    cmd_add(fake_path,'apple','苹果')
+    cmd_add(fake_path,'applet','小程序')
+    cmd_add(fake_path,'book','书')
+    cmd_search(fake_path,'app')
+    out = capsys.readouterr().out
+    assert 'apple' in out and 'applet' in out and 'book' not in out

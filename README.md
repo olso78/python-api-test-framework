@@ -35,9 +35,9 @@ bootcamp/
 ├─ day02_wordcount.py    第二版：sys.argv 传文件与 N，文件不存在不崩
 ├─ day03_wordcount.py    第三版（当前）：加 logging、pathlib、N 非数字的兜底
 ├─ test_wordcount.py     pytest 用例（4 个）
-├─ words.py              单词本：add / list，JSON 存读
-├─ test_words.py         单词本的 pytest 用例（2 个，用 tmp_path 隔离）
-├─ test_db.py            pymysql 连库、查询、与脚本输出对账
+├─ words.py              单词本：add / list / search / delete，JSON 存读
+├─ test_words.py         单词本的 pytest 用例（5 个，用 tmp_path 隔离；其中 1 个用 capsys 断言 search 输出）
+├─ db_check.py           pymysql 连库、查询、与脚本输出对账
 ├─ sample.txt            英文样本文本（24 个不同词）
 ├─ words.json            单词数据（本地数据，不进仓库）
 ├─ wordcount.log         运行日志（已在 .gitignore 里，不进仓库）
@@ -158,7 +158,7 @@ select word, freq from words order by freq desc limit 10;
 
 **为什么统一 `lower()`**：同一个词的不同大小写算同一个词，是词典类工具的常识；不统一的话，写到第 20 个词就会出现 `Apple` / `apple` 两条。
 
-对应到代码上只有三处要改（当前 `words.py` 还没做到）：
+这三处已按约定改完（`words.py` 当前实现）：
 
 1. `cmd_add` 开头加 `word = word.strip().lower()`、`meaning = meaning.strip()`；
 2. `cmd_add` 写回前判断 `if word in data:` → 打印"已更新"，否则打印"添加成功"；
@@ -193,7 +193,7 @@ python words.py add       # 打印用法，退出码 0
 - **只认英文**：正则 `[A-Za-z]+`，中文整段被丢弃。
 - **没去停用词**：`is` / `a` 会占前排，看结果时心里要有数。
 - **空输入的兜底是最小实现**：`main()` 里用 `if not cw: return` 挡住 `cw[0]` 越界，但空文件是**静默退出**（没有任何提示），算"不崩"，还不算"处理好"。。
-- **没有 CI**：测试只在本机跑，没接 GitHub Actions。
+- **集成用例没有定时任务**：CI 只跑离线用例（`-m "not integration"`），真实网络那 3 条靠本地手动跑。
 
 ## 环境
 
@@ -208,9 +208,8 @@ Python 3.13.9（项目内 `.venv`），pytest 9.2.0。运行时不依赖第三�
 - [x] Day 5：`pytest` 四个用例，先红后绿
 - [x] 数据库：建库建表 + CRUD（W2 提前）
 - [x] pymysql：连库、查询、与 `day03` 输出对账
-- [x] Day 6（部分）：单词本 `add` / `list`，JSON 存读 + 2 个用例
-- [ ] Day 6（待补）：重复 add 的覆盖提示 + 大小写归一化（见"行为约定"）
-- [ ] Day 7：`search` / `delete` + 对应用例
+- [x] Day 6：单词本 `add` / `list`，JSON 存读 + 2 个用例；重复 add 的覆盖提示 + 大小写归一化
+- [x] Day 7：`search` / `delete` + 对应用例（含 capsys 断言 search 输出）
 
 ## 三条规矩（给自己）
 

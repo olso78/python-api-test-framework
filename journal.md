@@ -80,4 +80,20 @@
 
 明天：11/13，A6 —— 建远程仓库并 push，加 `.github/workflows/test.yml` 让 push 自动跑 pytest，补 README 的"A1 项目"一节（怎么跑 / 怎么测 / 目录说明），把日志路径固定到 `reports/`，把 `test_github_cases` 的断网处理统一成 `skip`。
 
+## 11-13
+
+写了：A6 全流程走完——安全外置（`sync_to_mysql.py` 的密码改成 `os.getenv('MYSQL_PWD')`）、`requirements.txt` 补齐（pytest-html / requests / pyyaml）、在 GitHub 建公开仓库 `olso78/python-api-test-framework` 并 push（`git branch -M main` + `remote add` + `push -u`）、`pytest.ini` 注册 `integration` 标记、`.github/workflows/test.yml` 让每次 push 自动跑 `-m "not integration"`、README 置顶加 CI 徽章与"怎么跑 / 怎么测 / 目录"三块；本地 `pytest -q -m "not integration"` = **11 passed, 3 deselected**，全量仍是 14。LeetCode 121 买卖股票 + 136 只出现一次的数字，复习 5 / 56 / 20 三题。
+
+卡在：① 日志用相对路径，`run.log` 散落在不同目录，最后用 `Path(__file__)` 锚定；② `pytest.ini` 建到了上级 `project` 目录——pytest 能往上找，但不合工程规范；③ `test_github_cases` 断网时 `fail`，而 `test_github_api` 是 `skip`，同一项目两种行为；④ **`@pytest.mark.intergration` 拼错**：只给一句 `Unknown mark` 警告、程序照跑，于是 `-m "not integration"` 过滤不到它，CI 真的去连 GitHub API，触发 403 频控把套件打红——拼写错导致的静默失效；⑤ 密码明文硬编码，公开仓库前必须外置；⑥ 5 最长回文：辅助函数漏 `while`、漏返回切片 `s[l+1:r]`、把函数当方法调 `s1.expand_around_center(...)`、循环条件写成 `while left >= 0 or right <= len(s)-1`、最优比较放在循环外只保留最后一个中心；⑦ 56 合并区间：`sort()` 记成要赋值、`key` 位置写错、用 `range(len())` 拿索引、漏 `if not res`、重叠时直接覆盖右边界没用 `max`、`=<` 这种非法运算符；⑧ 20 有效括号：右括号分支忘了先判栈空、忘了 `pop()` 比对、忘了最后 `return not stack`。
+
+明天：11/14，提前进 W3 —— 简历 v0.5（用 `03_简历/简历诊断与岗位对照.xlsx` 的改稿骨架 + 我整理的"事实清单"填一页纸），并准备两段项目的 STAR 讲法。
+
+## 11-14
+
+写了：简历一天推了四版——v0.5（首版排版）→ v0.6 → v1.0 → **v1.1 定型**：单页、单栏、无照片，大创压成一行进「实习与其他经历」，删掉纪念馆那行把页面拉回一页；导出 `简历_v1.1.pdf` 并复制成 `徐高强_软件测试实习_南京.pdf` 供投递；另做了 `排版沙盒.html` 对比版式、`简历面试准备.md`（三问答案 + 两段口述稿）、`简历交接包_20261114.zip`；我把大创项目的架构与 8 个面试问题过了一遍，出 `大创项目_架构与可讲清单.md`（结论：只写一行"参与"，不写独立开发）。
+
+卡在：① 版式反复，Word 导出 PDF 在本机卡死，最后改走浏览器打印 HTML，末行落在 801/842，只剩约 5pt 余量；② 大创 8 问里"能答 4 / 半答 3 / 答不出 1（Cypher 为什么用 Union all）"，所以措辞只能写"参与"；③ 想再加一个"作业批改统计脚本"进简历，页面预算不够——必须先删掉词频项目整段（约 −96pt）才塞得下（+77pt），而且这个项目今天还没建。
+
+明天：11/15，做 `hw-stats`（作业批改统计脚本）——独立仓库、模拟数据、pandas 分组出班级周报/缺交名单/错题 TOP5、3 条 pytest；必须实测"同一件事手工 vs 脚本"的两个耗时，再出简历 v1.3。
+
 
