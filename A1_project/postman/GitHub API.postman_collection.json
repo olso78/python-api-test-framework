@@ -1,0 +1,71 @@
+{
+  "info": {
+    "_postman_id": "1190f55f-8e86-408c-8c77-5d3cd1b6417c",
+    "name": "GitHub API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "60242845",
+    "_collection_link": "https://go.postman.co/collection/60242845-1190f55f-8e86-408c-8c77-5d3cd1b6417c?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "get base_url",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"状态码 200\", () => pm.response.to.have.status(200));\r\npm.test(\"返回里含 star 数\", () => pm.expect(pm.response.json()).to.have.property(\"stargazers_count\"));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/repos/psf/requests",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "repos",
+            "psf",
+            "requests"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get 404",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"状态码 404\", () => pm.response.to.have.status(404));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/repos/psf/this_repo_does_not_exist",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "repos",
+            "psf",
+            "this_repo_does_not_exist"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
