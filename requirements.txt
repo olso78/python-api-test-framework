@@ -3,3 +3,4 @@ pymysql
 pytest-html
 requests
 pyyaml
+allure-pytest

@@ -132,8 +132,12 @@
 
 写了：Allure 报告接入——`pip install allure-pytest`、`npm install -g allure-commandline`；`pytest --alluredir=reports/allure-raw` 收集原始 JSON，`allure generate ... --clean` 编译静态 HTML，`allure open` 起本地预览；给用例加 `@allure.title` 中文标题，报告里能看到参数化数据、耗时与通过状态；`.gitignore` 补 `reports/`，提交 `fecf52e`。顺手验证了 `pytest -m "not integration"` 的输出：2 passed / 3 deselected。
 
-卡在：① `--alluredir = reports/allure-raw` 等号两边带空格，pytest 不认识这个参数；② 直接 `python test_github.py` 会 `ModuleNotFoundError`——测试必须由 pytest 驱动，它才注入 `sys.path`、加载 conftest；③ `allure open` 是起本地服务、占端口，要 Ctrl+C 才退出。
+卡在（Allure）：① `--alluredir = reports/allure-raw` 等号两边带空格，pytest 不认识这个参数；② 直接 `python test_github.py` 会 `ModuleNotFoundError`——测试必须由 pytest 驱动，它才注入 `sys.path`、加载 conftest；③ `allure open` 是起本地服务、占端口，要 Ctrl+C 才退出。
 
-明天：11/20，Playwright 装环境（`pip install pytest-playwright` + `playwright install chromium`）＋ 第一个 UI 用例（saucedemo 登录）；下午 JD 采样 30 条跑 `jd_scan.py`。
+**晚：Playwright 起跑 + CI 修红。** 装 `pytest-playwright` 与 Chromium（下载中途超时，重试后成功）；跑通 saucedemo 登录用例，用 `expect(page).to_have_url` 做自动等待断言；再写 `locked_out_user` 的失败场景，用 `locator("h3[data-test='error']")` + `to_be_visible`，截图存 `A1_project/reports/` 并 `allure.attach.file` 塞进报告。随后发现 GitHub Actions 变红（`a63d7be`）——原因是新 UI 用例在 CI 里 import `playwright`，而 `requirements.txt` 没有它，**收集阶段就 ModuleNotFoundError**，9 秒失败。修法两层：给 UI 用例打 `ui` 标记、主流程改跑 `-m "not integration and not ui"`；再加 `pytest.importorskip("playwright")`，缺依赖时整份跳过而不是报错；另建 `ui-tests.yml`（手动触发 + 每周一），装浏览器跑 UI 并上传 Allure 原始数据。本地 12 passed / 5 deselected，提交 `ba17fe3`、`bbb8d27`。
+
+卡在（Playwright / CI）：④ 截图路径用相对路径会落在 `bootcamp/reports` 而不是 `A1_project/reports`，改 `Path(__file__).parent.parent / "reports"`；⑤ `page.pause()` 放在截图之前，浏览器停住、截图不生成；⑥ 把 `expect` 拼成 `except`，`SyntaxError`；⑦ 最初以为"打了标记就不会导入"——**标记只影响执行，不影响收集**，所以必须在模块顶部 `importorskip`。
+
+明天：11/20，给 UI 用例补三个账号的参数化，配 `pytest_runtest_makereport` 钩子做"失败才截图"（替换现在写在用例里的截图）；下午 JD 采样 30 条跑 `jd_scan.py`。
 
 
