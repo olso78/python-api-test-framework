@@ -96,4 +96,44 @@
 
 明天：11/15，做 `hw-stats`（作业批改统计脚本）——独立仓库、模拟数据、pandas 分组出班级周报/缺交名单/错题 TOP5、3 条 pytest；必须实测"同一件事手工 vs 脚本"的两个耗时，再出简历 v1.3。
 
+## 11-15
+
+写了：`hw-stats` 从零到上线——`generate_data.py` 造 3 班 × 4 周共 120 条模拟数据（姓名用占位、README 声明"非真实学生信息"）；`report.py` 用 `csv` + `argparse` 出班级周报（提交率 / 平均正确率）、缺交名单、错题 TOP5；统计逻辑抽成纯函数 `generate_stats`，文件读写与计算分离；`test_report.py` 3 条用例（正常周 / 全班缺交 / 空数据）**3 passed**；独立仓库 `olso78/hw-stats` 已 push。实测"同一件事"：Excel 手工汇总 17 分 29 秒 → 脚本 0.1 秒。简历出 **v1.3**：删掉词频整段、加入 hw-stats 四条，仍是一页（末行 785/842）。
+
+卡在：① `writerow` 传整句字符串，数据全挤一列（它要的是列表）；② 缺交学生仍随机生成 `correct_questions`，造出"交白卷得 8 分"的荒谬数据；③ `"{i:03d}"` 忘了 `f` 前缀，学号全是字面量；④ `parser.parse_args()` 写在模块级，pytest 一导入就 `SystemExit`；⑤ CSV 读出的 `'3'` 直接和整数 3 比，循环进不去；⑥ `csv.DictReader(f)` 没 `list()`，`len()` 报错且第二遍遍历为空；⑦ 缺交的 `total_questions` 被算进分母，正确率算出 40%；⑧ `print` 写在循环里打了 120 次、`avg_accuracy` 定义在分支里导致空数据 `UnboundLocalError`；⑨ 测试写在测试函数内部扫不到、参数顺序传反、断言用中文冒号对英文键、`return` 里防了零但 `print` 里没防。
+
+明天：11/16，把 v1.3 定稿（导出 `徐高强_软件测试实习_南京.pdf`）并开始首投 3–5 家；投递记录写进 `简历诊断与岗位对照.xlsx` 的「投递对照表」。
+
+## 11-16
+
+写了：简历按"自制表格模板"重排——`简历_v1.4_表格版.docx`，由 `tools/build_resume_table.py` 复制 `简历_模板.docx` 生成（原件不动）：三个项目统一成"技术栈 / 开发工具 / 项目描述 / 成果"四段，大创进项目经历、写成"参与问答链路"，删掉「实习经历」一节、把助教场景并进 hw-stats 的项目描述，新增「自我评价」；按"少用符号、多用文字"把加号、箭头、括号的写法全部改成叙述句；一页（末行 651/842）。顺手把 16 个废案简历归到 `_archive`（约 1.3MB）。`hw-stats` 补了 `--md` 导出、加 `.gitignore` 清掉 `__pycache__`，仓库已同步。
+
+卡在：① 表格模板自带大行距，同一份内容 9.5pt 会溢出到两页、9.2pt 又只剩七成七，必须靠调字号与"删一节/加一行"反复试才落在一页；② 给项目加"开发工具"一行时，差点把没用过的 Postman 直接写上去——被点破：投测试岗却一个测试工具都没用过，这是硬伤，工具必须先真用过再写；③ 模板是六列合并单元格，脚本不能按列号写，得按"合并后的单元格对象"定位，否则会写错格。
+
+明天：11/17，Postman 实操——建 Collection、环境变量、Tests 断言状态码与字段、Runner 跑用例、导出 collection JSON 提交进仓库；用真用过的工具回填简历，再投 3 家测试岗。
+
+## 11-17
+
+写了：Postman 全流程走通——用"Continue without an account"进本地工作区（不绑文件夹，避免污染仓库）；建 `GitHub API` 集合与环境变量 `base_url`；两条请求分别断言 200 与 404（`pm.test` + `to.have.status`、`to.have.property`）；Collection Runner 批量跑出 2 passed / 0 failed；导出 Collection v2.1 存进 `A1_project/postman/` 并提交（`ddcf27b`）。简历「开发工具」加回 Postman（这次是真用过），导出投递版 PDF `徐高强_软件测试实习_南京.pdf`（一页，末行 666/842）。
+
+卡在：① 新版把"跳过登录"藏在页面最底部，只有一行 `Continue without an account`；② 环境变量是表格视图，把 `https://api.github.com` 填进了变量名列，触发 duplicated key 警告；③ Runner 第一次报 `Empty request URL`——改完请求没点 Save，Runner 抓到的还是空 URL；④ 导出时先选了 Environment 而不是 Collection，重导一次才拿到 v2.1 的集合文件。
+
+明天：11/18，计划是 JD 采样（30 条）＋ Playwright 安装。
+
+## 11-18
+
+写了：没有代码产出。仓库无提交、文件无变更，当天只有站内科目一提醒。
+
+卡在：连续几天高强度后停了一天。停一天不是问题，但要有"重新启动"的动作，否则容易停成三天：下次开工先用一条最小命令把循环接回来（跑一遍 `pytest -q`），再开新内容。
+
+明天：11/19，Allure 接入。
+
+## 11-19
+
+写了：Allure 报告接入——`pip install allure-pytest`、`npm install -g allure-commandline`；`pytest --alluredir=reports/allure-raw` 收集原始 JSON，`allure generate ... --clean` 编译静态 HTML，`allure open` 起本地预览；给用例加 `@allure.title` 中文标题，报告里能看到参数化数据、耗时与通过状态；`.gitignore` 补 `reports/`，提交 `fecf52e`。顺手验证了 `pytest -m "not integration"` 的输出：2 passed / 3 deselected。
+
+卡在：① `--alluredir = reports/allure-raw` 等号两边带空格，pytest 不认识这个参数；② 直接 `python test_github.py` 会 `ModuleNotFoundError`——测试必须由 pytest 驱动，它才注入 `sys.path`、加载 conftest；③ `allure open` 是起本地服务、占端口，要 Ctrl+C 才退出。
+
+明天：11/20，Playwright 装环境（`pip install pytest-playwright` + `playwright install chromium`）＋ 第一个 UI 用例（saucedemo 登录）；下午 JD 采样 30 条跑 `jd_scan.py`。
+
 
