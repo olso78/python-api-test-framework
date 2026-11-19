@@ -2,6 +2,7 @@ from api.client import get
 from common.assert_util import check
 import pytest
 import requests
+import allure
 from common.logger import logger
 
 def test_check_pass():
@@ -15,6 +16,7 @@ def test_check_error():
         check(FakeResp(),404)
 
 @pytest.mark.integration
+@allure.title("验证 GitHub API 获取 star 成功")
 def test_github_api():
     url = 'https://api.github.com/repos/psf/requests'
     try:
