@@ -1,0 +1,23 @@
+name: ui-tests
+# UI 用例需要浏览器，不跟每次 push 跑：手动触发 + 每周一次
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 1 * * 1"   # 每周一 09:00（北京时间）跑一次
+
+jobs:
+  ui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install -r requirements.txt pytest-playwright
+      - run: python -m playwright install --with-deps chromium
+      - run: python -m pytest -q -m ui --alluredir=reports/allure-raw
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ui-allure-raw
+          path: reports/allure-raw
