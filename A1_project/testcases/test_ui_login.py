@@ -1,5 +1,10 @@
-import allure
 import pytest
+
+# CI 里没有浏览器依赖：整份用例在缺 playwright 时整体跳过（而不是收集阶段报错）
+pytest.importorskip("playwright")
+pytest.importorskip("pytest_playwright")
+
+import allure
 from playwright.sync_api import expect
 from pathlib import Path
 
